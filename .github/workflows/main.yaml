@@ -34,7 +34,7 @@
               --project-name ${{ github.repository }} \
               --branch ${GITHUB_REF##*/} \
               --base-uri https://us.ast.checkmarx.net \
-              --tenant bensimpson-se-dev \
+              --tenant  bs-auth \
               --client-id ${{ secrets.CX_CLIENT_ID }} \
               --client-secret ${{ secrets.CX_CLIENT_SECRET }} \
 
