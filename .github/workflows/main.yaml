@@ -1,0 +1,41 @@
+  name: Checkmarx One Scan
+  on:
+    push:
+      branches:
+        - main
+        - master
+        - dev
+
+  jobs:
+    build:
+      runs-on: ubuntu-latest
+      steps:
+        - name: Checkout (current repo)
+          uses: actions/checkout@v4
+
+
+
+        - name: Install Maven, NPM, ... # Add any necessary package management
+          run: |
+            sudo apt install maven
+            ls -a
+
+
+
+
+        - name: Run Checkmarx One CLI Scan
+          run: |
+            /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+            /home/linuxbrew/.linuxbrew/bin/brew install checkmarx/ast-cli/ast-cli
+            /home/linuxbrew/.linuxbrew/Cellar/ast-cli/*/bin/cx \
+              scan create \
+              -s . \
+              --agent GitHub \
+              --project-name ${{ github.repository }} \
+              --branch ${GITHUB_REF##*/} \
+              --base-uri https://us.ast.checkmarx.net \
+              --tenant bensimpson-se-dev \
+              --client-id ${{ secrets.CX_CLIENT_ID }} \
+              --client-secret ${{ secrets.CX_CLIENT_SECRET }} \
+
+        
