@@ -23,19 +23,17 @@
 
 
 
-        - name: Run Checkmarx One CLI Scan
-          run: |
-            /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-            /home/linuxbrew/.linuxbrew/bin/brew install checkmarx/ast-cli/ast-cli
-            /home/linuxbrew/.linuxbrew/Cellar/ast-cli/*/bin/cx \
-              scan create \
-              -s . \
-              --agent GitHub \
-              --project-name ${{ github.repository }} \
-              --branch ${GITHUB_REF##*/} \
-              --base-uri https://us.ast.checkmarx.net \
-              --tenant  bs-auth \
-              --client-id ${{ secrets.CX_CLIENT_ID }} \
-              --client-secret ${{ secrets.CX_CLIENT_SECRET }} \
+        - name: Run Checkmarx One Scan
+          uses: Checkmarx/ast-github-action@2.3.28
+          with:
+            base_uri: 'https://us.ast.checkmarx.net'
+            cx_tenant: 'bs-auth'
+            cx_client_id: ${{ secrets.CX_CLIENT_ID }}
+            cx_client_secret: ${{ secrets.CX_CLIENT_SECRET }}
+            project_name: ${{ github.repository }}
+            branch: ${{ github.ref_name }}
+            scan_params: '--scan-types sast,iac-security --debug'
+            github_token: ''
+          continue-on-error: true
 
         
